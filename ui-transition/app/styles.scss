@@ -1,4 +1,4 @@
-@import './assets/carot-mixin';
+@import './assets/stylesheets/carot-mixin';
 
 /* General */
 $theme-color: #458804;
@@ -33,7 +33,7 @@ $progress-carot-left: calc(#{$progress-percent} - #{$progress-carot-size});
 $progress-carot-color: $theme-color;
 
 /* Card Input */
-$card-input-height: 40px;
+$card-input-height: calc(40px - 2px);
 
 /* Text Input */
 $text-input-horiz-padding: 5px;
@@ -188,5 +188,42 @@ $button-horiz-padding: 20px;
         color: $theme-color;
         font: $text-font;
         cursor: pointer;
+    }
+}
+
+
+$card-vert-padding: 30px;
+$checkmark-img-size: 100px;
+
+/* Success Card */
+
+#success-state {
+    .card {
+        background-color: $theme-color;
+        font: $text-font;
+        text-align: center;
+        color: white;
+
+        .card-content-centered {
+            margin: $card-vert-padding 0px;
+        }
+
+        .img-container {
+            width: 100%;
+        }
+
+        #checkmark-img {
+            width: $checkmark-img-size;
+            height: $checkmark-img-size;
+        }
+
+        .success-message-container {
+            width: 100%;
+            text-align: center;
+
+            .success-message {
+                margin: 0px auto;
+            }
+        }
     }
 }
