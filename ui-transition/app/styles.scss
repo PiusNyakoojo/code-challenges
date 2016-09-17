@@ -1,0 +1,192 @@
+@import './assets/carot-mixin';
+
+/* General */
+$theme-color: #458804;
+$bold-text-font: bold 15px arial, serif;
+$text-font: 15px arial, serif;
+$text-color: #666666;
+
+/* Carot details (default) */
+$carot-size: 10px;
+$carot-left: 200px;
+
+/* Card Prompt */
+$prompt-bg-color: #EEEEEE;
+$prompt-carot-size: 10px;
+$prompt-carot-left: 260px; // horizontal position of the carot
+$prompt-margin-bottom: 5px; // vertical distance from card
+
+/* Card */
+$card-width: 320px; // Width of card (default 320px)
+$card-horiz-padding: 20px;
+$card-vert-padding: 10px;
+$card-border-radius: 5px;
+$cursor-size: 10px;
+
+/* Progress bar */
+$progress-percent: 80%; // percentage until completion
+$progress-bar-bg-color: $text-color;
+$progress-bar-height: 15px;
+$progress-bar-border-radius: 5px;
+$progress-carot-size: 7px;
+$progress-carot-left: calc(#{$progress-percent} - #{$progress-carot-size});
+$progress-carot-color: $theme-color;
+
+/* Card Input */
+$card-input-height: 40px;
+
+/* Text Input */
+$text-input-horiz-padding: 5px;
+$text-input-vert-padding: 10px;
+$text-input-font: $text-font;
+
+/* Button Input */
+$button-font-size: 17px;
+$button-border-radius: 5px;
+$button-text-color: white;
+$button-horiz-padding: 20px;
+
+/* Card prompt */
+.card-prompt {
+    width: $card-width;
+    font: $text-font;
+    margin-bottom: $prompt-margin-bottom;
+
+    .prompt-details {
+        color: black;
+        background-color: $prompt-bg-color;
+        font: $bold-text-font;
+        border-radius: $card-border-radius;
+        padding: $card-horiz-padding 20px;
+
+        .prompt-points {
+            color: $theme-color;
+        }
+    }
+
+    .prompt-carot-container {
+        @include carot-container($prompt-carot-size);
+
+        .carot {
+            @include carot($prompt-carot-size, "down");
+        }
+
+        .carot-1 {
+            @include carot-1($prompt-carot-size, $prompt-carot-left, $prompt-bg-color);
+        }
+
+        .carot-2 {
+            @include carot-2($prompt-carot-size, $prompt-carot-left, $prompt-bg-color);
+        }
+    }
+}
+
+/* Card */
+.card {
+    width: $card-width;
+    border: 1px solid $progress-bar-bg-color;
+    border-radius: $card-border-radius;
+    font: $text-font;
+
+    .card-content-centered {
+        width: calc(#{$card-width} - (#{$card-horiz-padding} + #{$card-horiz-padding}));
+        margin-left: $card-horiz-padding;
+        margin-top: $card-vert-padding;
+    }
+
+    /* Progress bar */
+    .progress-bar {
+        .progress-bar-bg {
+            overflow: hidden;
+            height: $progress-bar-height;
+            background-color: $progress-bar-bg-color;
+            border-radius: $progress-bar-border-radius;
+        }
+
+        .progress-bar-fg {
+            height: 100%;
+            width: $progress-percent;
+            background-color: $theme-color;
+        }
+
+        .progress-carot-container {
+            margin-top: 2px;
+            @include carot-container($progress-carot-size);
+
+            .carot {
+                @include carot($progress-carot-size, "up");
+            }
+
+            .carot-1 {
+                @include carot-1($progress-carot-size, $progress-carot-left, $progress-carot-color);
+            }
+
+            .carot-2 {
+                @include carot-2($progress-carot-size, $progress-carot-left, $progress-carot-color);
+            }
+        }
+
+    }
+
+    /* Card details */
+    .card-details {
+        color: $text-color;
+        
+        .card-title {
+            font: $bold-text-font;
+        }
+
+        .card-description {
+            font: $text-font;
+        }
+    }
+
+    /* Card input */
+    .card-input {
+        height: $card-input-height;
+        .text-input {
+            padding: $text-input-vert-padding $text-input-horiz-padding;
+            border: 1px solid $progress-bar-bg-color;
+            font: $text-input-font;
+            height: calc(100% - (#{$text-input-vert-padding} + #{$text-input-vert-padding}));
+
+            &:hover {
+                border: 1px solid $theme-color;
+                box-shadow: 0 0 2px $theme-color;
+            }
+
+            &:focus {
+                outline: none !important;
+                border: 1px solid $theme-color;
+                box-shadow: 0 0 5px $theme-color;
+            }
+        }
+
+        .button-input {
+            position: relative;
+            float: right;
+            border: 1px solid $theme-color;
+            height: 100%;
+            padding: 0 $button-horiz-padding;
+            background-color: $theme-color;
+            color: $button-text-color;
+            border-radius: $button-border-radius;
+            font: $bold-text-font;
+            font-size: $button-font-size;
+            cursor: pointer;
+            outline: none;
+        }
+    }
+}
+
+/* Card dismiss */
+.card-dismiss {
+    padding: $card-vert-padding $card-horiz-padding;
+
+    .dismiss-message {
+        display: inline-block;
+        color: $theme-color;
+        font: $text-font;
+        cursor: pointer;
+    }
+}

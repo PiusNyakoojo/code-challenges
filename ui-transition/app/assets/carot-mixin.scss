@@ -1,0 +1,27 @@
+@mixin carot-container($size) {
+    overflow: hidden;
+    position: relative;
+    height: $size;
+}
+
+@mixin carot($size, $direction) {
+    position: absolute;
+    bottom: 0px;
+    @if $direction == "up" {
+        border-top: $size solid transparent;
+    } @else if $direction == "down" {
+        border-bottom: $size solid transparent;
+    }
+}
+
+@mixin carot-1($size, $left, $color) {
+    width: $left;
+    left: 0px;
+    border-right: $size solid $color;
+}
+
+@mixin carot-2($size, $left, $color) {
+    width: 100px;
+    left: calc(#{$left} + #{$size});
+    border-left: $size solid $color;
+}
