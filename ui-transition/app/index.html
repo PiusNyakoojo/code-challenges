@@ -3,8 +3,10 @@
 <head>
     <title>Coding Challenge</title>
     <link rel="stylesheet" type="text/css" href="styles.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 </head>
 <body>
+    <button style='position: fixed; right: 10px; top: 20px;' onclick='resetDemo()'>Reset Demo</button>
     <!-- Initial state -->
     <div id='initial-state'>
         <div class='card-prompt'>
@@ -36,15 +38,25 @@
                     </div>
                 </div><br><br>
                 <div class='card-input'>
-                    <input class='text-input' type="text">
-                    <button class='button-input' type="button">ADD</button>
+                    <input id='text-input' class='text-input' type="text">
+                    <button class='button-input' type="button" onclick='submitAchievementCode()'>ADD</button>
+                    <div id='input-prompt'>
+                        <div class='prompt-carot-container'>
+                            <div class='carot carot-1'></div>
+                            <div class='carot carot-2'></div>
+                        </div>
+                        <div class='prompt-details'>
+                            Please enter valid input (more than 3 characters).
+                        </div>
+                    </div>
                 </div><br><br>
             </div>
+            
         </div>
         <div class='card-dismiss'>
-            <div class='dismiss-message'>
+            <button class='dismiss-message' onclick='dismissInitial()'>
                 Nevermind, I'll do it later.
-            </div>
+            </button>
         </div>
     </div>
 
@@ -64,7 +76,7 @@
             </div>
         </div>
         <div class='card-dismiss'>
-            <div class='dismiss-message'>
+            <div class='dismiss-message' onclick='dismissSuccess()'>
                 Dismiss.
             </div>
         </div>

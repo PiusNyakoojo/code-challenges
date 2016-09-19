@@ -47,6 +47,15 @@ $button-text-color: white;
 $button-horiz-padding: 20px;
 $button-vert-margin: 20px;
 
+/* Input Prompt */
+$input-prompt-width: calc(#{$card-width} - (#{$card-horiz-padding} + #{$card-horiz-padding}));
+$input-prompt-bg-color: #ED4337;
+$input-prompt-carot-size: 10px;
+$input-prompt-carot-left: 20px; // horizontal position of the carot
+$input-prompt-margin-top: 2px;
+$input-prompt-margin-bottom: 0px;
+
+
 /* Card prompt */
 .card-prompt {
     width: $card-width;
@@ -84,6 +93,7 @@ $button-vert-margin: 20px;
 
 /* Card */
 .card {
+    position: relative;
     overflow: hidden;
     width: $card-width;
     border: 1px solid $progress-bar-bg-color;
@@ -95,6 +105,34 @@ $button-vert-margin: 20px;
         margin-left: $card-horiz-padding;
         margin-top: $card-vert-padding;
     }
+}
+
+/* Card dismiss */
+.card-dismiss {
+    padding: $card-vert-padding $card-horiz-padding;
+
+    .dismiss-message {
+        display: inline-block;
+        color: $theme-color;
+        font: $text-font;
+        cursor: pointer;
+        background: none;
+        border: none;
+        outline: none;
+        margin:0;
+        padding:0;
+    }
+}
+
+
+/* Initial State Card */
+
+#initial-state {
+    //display: none;
+}
+
+#initial-state .card {
+    @extend .card;
 
     /* Progress bar */
     .progress-bar {
@@ -145,12 +183,15 @@ $button-vert-margin: 20px;
 
     /* Card input */
     .card-input {
-        height: $card-input-height;
+        position: relative;
+        display: inline-block;
+        width: calc(#{$card-width} - (#{$card-horiz-padding} + #{$card-horiz-padding}));
+        
         .text-input {
             padding: $text-input-vert-padding $text-input-horiz-padding;
             border: 1px solid $progress-bar-bg-color;
             font: $text-input-font;
-            height: calc(100% - (#{$text-input-vert-padding} + #{$text-input-vert-padding}));
+            height: calc(100% - (#{$text-input-vert-padding} + #{$text-input-vert-padding}) - 2px);
 
             &:hover {
                 border: 1px solid $theme-color;
@@ -168,7 +209,7 @@ $button-vert-margin: 20px;
             position: relative;
             float: right;
             border: 1px solid $theme-color;
-            height: 100%;
+            height: $card-input-height;
             padding: 0 $button-horiz-padding;
             background-color: $theme-color;
             color: $button-text-color;
@@ -179,55 +220,78 @@ $button-vert-margin: 20px;
             outline: none;
         }
     }
-}
 
-/* Card dismiss */
-.card-dismiss {
-    padding: $card-vert-padding $card-horiz-padding;
+    #input-prompt {
+        display: none;
+        width: $input-prompt-width;
+        margin-top: $input-prompt-margin-top;
+        margin-bottom: $input-prompt-margin-bottom;
 
-    .dismiss-message {
-        display: inline-block;
-        color: $theme-color;
-        font: $text-font;
-        cursor: pointer;
+        .prompt-details {
+            color: white;
+            background-color: $input-prompt-bg-color;
+            font: $bold-text-font;
+            border-radius: $card-border-radius;
+            padding: $card-horiz-padding 20px;
+        }
+
+        .prompt-carot-container {
+            @include carot-container($input-prompt-carot-size);
+
+            .carot {
+                @include carot($input-prompt-carot-size, "up");
+            }
+
+            .carot-1 {
+                @include carot-1($input-prompt-carot-size, $input-prompt-carot-left, $input-prompt-bg-color);
+            }
+
+            .carot-2 {
+                @include carot-2($input-prompt-carot-size, $input-prompt-carot-left, $input-prompt-bg-color);
+            }
+        }
     }
 }
-
 
 $card-vert-padding: 30px;
 $checkmark-img-size: 100px;
 
+
 /* Success Card */
-
 #success-state {
-    .card {
-        background-color: $theme-color;
-        font: $text-font;
+    display: none;
+}
+
+#success-state .card {
+    @extend .card;
+
+    background-color: $theme-color;
+    font: $text-font;
+    text-align: center;
+    color: white;
+
+    .card-content-centered {
+        width: calc(100% - (#{$card-horiz-padding} + #{$card-horiz-padding}));
+        margin-left: $card-horiz-padding;
+        margin-top: $card-vert-padding;
+    }
+
+    .img-container {
+        width: 100%;
+    }
+
+    #checkmark-img {
+        width: $checkmark-img-size;
+        height: $checkmark-img-size;
+    }
+
+    .success-message-container {
+        width: 100%;
         text-align: center;
-        color: white;
 
-        .card-content-centered {
-            width: calc(100% - (#{$card-horiz-padding} + #{$card-horiz-padding}));
-            margin-left: $card-horiz-padding;
-            margin-top: $card-vert-padding;
-        }
-
-        .img-container {
-            width: 100%;
-        }
-
-        #checkmark-img {
-            width: $checkmark-img-size;
-            height: $checkmark-img-size;
-        }
-
-        .success-message-container {
-            width: 100%;
-            text-align: center;
-
-            .success-message {
-                margin: 0px auto;
-            }
+        .success-message {
+            margin: 0px auto;
+            font: $bold-text-font;
         }
     }
 }
