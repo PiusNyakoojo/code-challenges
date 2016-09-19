@@ -2,7 +2,7 @@
 
 ### [Demo](https://code-challenge-0.firebaseapp.com)
 
-**Objective:** Transition between 2 states: Initial and Success using pure JavaScript.
+**Objective:** Transition between 2 states: Initial and Success using pure JavaScript or the JavaScript framework of your choosing upon click of a button.
 
 **Additional Features:**
 * Mobile support
