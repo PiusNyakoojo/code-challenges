@@ -4,7 +4,15 @@
 
 **Objective:** Transition between 2 states: Initial and Success using pure JavaScript.
 
-**Features:** TBA
+**Additional Features:**
+* Mobile support
+  * Card width is adjustable in styles.scss to a specific % (e.g. 30%)
+  * Default value is 320px.
+* Input validation
+  * Reuse card-prompt component to inform user of invalid input
+* Animation
+  * Submission animation
+  * Dismissal animation
 
 **Development features:**
 * Written in the latest version of javascript: ES6
