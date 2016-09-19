@@ -24,7 +24,7 @@ $card-border-radius: 5px;
 $cursor-size: 10px;
 
 /* Progress bar */
-$progress-percent: 80%; // percentage until completion
+$progress-percent: 20%; // percentage until completion
 $progress-bar-bg-color: $text-color;
 $progress-bar-height: 15px;
 $progress-bar-border-radius: 5px;
@@ -93,7 +93,6 @@ $input-prompt-margin-bottom: 0px;
 
 /* Card */
 .card {
-    position: relative;
     overflow: hidden;
     width: $card-width;
     border: 1px solid $progress-bar-bg-color;
@@ -128,6 +127,7 @@ $input-prompt-margin-bottom: 0px;
 /* Initial State Card */
 
 #initial-state {
+    position: absolute;
     //display: none;
 }
 
@@ -186,7 +186,7 @@ $input-prompt-margin-bottom: 0px;
         position: relative;
         display: inline-block;
         width: calc(#{$card-width} - (#{$card-horiz-padding} + #{$card-horiz-padding}));
-        
+
         .text-input {
             padding: $text-input-vert-padding $text-input-horiz-padding;
             border: 1px solid $progress-bar-bg-color;
@@ -259,6 +259,7 @@ $checkmark-img-size: 100px;
 
 /* Success Card */
 #success-state {
+    position: absolute;
     display: none;
 }
 

@@ -11,7 +11,7 @@
     <div id='initial-state'>
         <div class='card-prompt'>
             <div class='prompt-details'>
-                ONLY <span class='prompt-points'>35</span> MORE POINTS TO GO!
+                ONLY <span id='points-left' class='prompt-points'>35</span> MORE POINTS TO GO!
             </div>
             <div class='prompt-carot-container'>
                 <div class='carot carot-1'></div>
@@ -22,11 +22,11 @@
             <div class='card-content-centered'>
                 <div class='progress-bar'>
                     <div class='progress-bar-bg'>
-                        <div class='progress-bar-fg'></div>
+                        <div id='progress-bar' class='progress-bar-fg'></div>
                     </div>
-                    <div class='progress-carot-container'>
-                        <div class="carot carot-1"></div>
-                        <div class="carot carot-2"></div>
+                    <div id='progress-carot' class='progress-carot-container'>
+                        <div id='progress-carot-1' class="carot carot-1"></div>
+                        <div id='progress-carot-2' class="carot carot-2"></div>
                     </div>
                 </div><br><br>
                 <div class='card-details'>
@@ -45,7 +45,7 @@
                             <div class='carot carot-1'></div>
                             <div class='carot carot-2'></div>
                         </div>
-                        <div class='prompt-details'>
+                        <div id='input-prompt-message' class='prompt-details'>
                             Please enter valid input (more than 3 characters).
                         </div>
                     </div>
