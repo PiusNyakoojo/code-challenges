@@ -5,6 +5,7 @@ $theme-color: #458804;
 $bold-text-font: bold 15px arial, serif;
 $text-font: 15px arial, serif;
 $text-color: #666666;
+$card-width: 320px; // Width of card (default 320px); can be replaced with %
 
 /* Carot details (default) */
 $carot-size: 10px;
@@ -13,11 +14,10 @@ $carot-left: 200px;
 /* Card Prompt */
 $prompt-bg-color: #EEEEEE;
 $prompt-carot-size: 10px;
-$prompt-carot-left: 260px; // horizontal position of the carot
+$prompt-carot-left: calc(100% - 50px); // horizontal position of the carot
 $prompt-margin-bottom: 5px; // vertical distance from card
 
 /* Card */
-$card-width: 320px; // Width of card (default 320px)
 $card-horiz-padding: 20px;
 $card-vert-padding: 10px;
 $card-border-radius: 5px;
@@ -45,6 +45,7 @@ $button-font-size: 17px;
 $button-border-radius: 5px;
 $button-text-color: white;
 $button-horiz-padding: 20px;
+$button-vert-margin: 20px;
 
 /* Card prompt */
 .card-prompt {
@@ -83,13 +84,14 @@ $button-horiz-padding: 20px;
 
 /* Card */
 .card {
+    overflow: hidden;
     width: $card-width;
     border: 1px solid $progress-bar-bg-color;
     border-radius: $card-border-radius;
     font: $text-font;
 
     .card-content-centered {
-        width: calc(#{$card-width} - (#{$card-horiz-padding} + #{$card-horiz-padding}));
+        width: calc(100% - (#{$card-horiz-padding} + #{$card-horiz-padding}));
         margin-left: $card-horiz-padding;
         margin-top: $card-vert-padding;
     }
@@ -205,7 +207,9 @@ $checkmark-img-size: 100px;
         color: white;
 
         .card-content-centered {
-            margin: $card-vert-padding 0px;
+            width: calc(100% - (#{$card-horiz-padding} + #{$card-horiz-padding}));
+            margin-left: $card-horiz-padding;
+            margin-top: $card-vert-padding;
         }
 
         .img-container {
