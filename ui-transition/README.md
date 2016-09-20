@@ -10,14 +10,22 @@
   * Default value is 320px.
 * Input validation
   * Reuse card-prompt component to inform user of invalid input
-* Animation
+* Animations
   * Submission animation
   * Dismissal animation
+* Screen reader friendly
+  * Tested with ChromeVox
 
 **Development features:**
 * Written in the latest version of javascript: ES6
 * Uses SASS for easy re-use of styling components
 * Built with webpack
+* jQuery + animate.css for animations 
+
+**Browser support**
+![Chrome](https://raw.github.com/alrra/browser-logos/master/chrome/chrome_48x48.png) | ![Firefox](https://raw.github.com/alrra/browser-logos/master/firefox/firefox_48x48.png) | ![IE](https://raw.github.com/alrra/browser-logos/master/internet-explorer/internet-explorer_48x48.png) | ![Opera](https://raw.github.com/alrra/browser-logos/master/opera/opera_48x48.png) | ![Safari](https://raw.github.com/alrra/browser-logos/master/safari/safari_48x48.png)
+--- | --- | --- | --- | --- |
+Latest ✔ | Latest ✔ | 10+ ✔ | Latest ✔ | 6.1+ ✔ |
 
 ### Run
 1 - Install dependencies

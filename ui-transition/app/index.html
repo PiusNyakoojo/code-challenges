@@ -3,12 +3,11 @@
 <head>
     <title>Coding Challenge</title>
     <link rel="stylesheet" type="text/css" href="styles.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 </head>
 <body>
     <button style='position: fixed; right: 10px; top: 20px;' onclick='resetDemo()'>Reset Demo</button>
     <!-- Initial state -->
-    <div id='initial-state'>
+    <div id='initial-state' aria-hidden='false'>
         <div class='card-prompt'>
             <div class='prompt-details'>
                 ONLY <span id='points-left' class='prompt-points'>35</span> MORE POINTS TO GO!
@@ -30,7 +29,7 @@
                     </div>
                 </div><br><br>
                 <div class='card-details'>
-                    <div class='card-title'>ENTER ACHIEVEMENT CODE</div>
+                    <div class='card-title' role='banner' aria-label='Enter achievement code'>ENTER ACHIEVEMENT CODE</div>
                     <br>
                     <div class='card-description'>
                         Look at your receipt or check the text we sent you, and enter the 
@@ -38,30 +37,32 @@
                     </div>
                 </div><br><br>
                 <div class='card-input'>
-                    <input id='text-input' class='text-input' type="text">
-                    <button class='button-input' type="button" onclick='submitAchievementCode()'>ADD</button>
+                    <input id='text-input' class='text-input' type="text" role='textbox' aria-describedby="input-prompt-message">
+                    <button class='button-input' type="button" role='button' onclick='submitAchievementCode()'>ADD</button>
                     <div id='input-prompt'>
                         <div class='prompt-carot-container'>
                             <div class='carot carot-1'></div>
                             <div class='carot carot-2'></div>
                         </div>
-                        <div id='input-prompt-message' class='prompt-details'>
+                        <div id='input-prompt-message' class='prompt-details' aria-hidden='true'>
                             Please enter valid input (more than 3 characters).
                         </div>
                     </div>
                 </div><br><br>
             </div>
-            
+            <div id='loading-icon-container'>
+                <div class="loading"></div>
+            </div>
         </div>
         <div class='card-dismiss'>
-            <button class='dismiss-message' onclick='dismissInitial()'>
+            <button class='dismiss-message' role='button' onclick='dismissInitial()'>
                 Nevermind, I'll do it later.
             </button>
         </div>
     </div>
 
     <!-- Success state -->
-    <div id='success-state'>
+    <div id='success-state' aria-hidden='true'>
         <div class='card'>
             <div class='card-content-centered'>
                 <div class='img-container'>
@@ -76,9 +77,9 @@
             </div>
         </div>
         <div class='card-dismiss'>
-            <div class='dismiss-message' onclick='dismissSuccess()'>
+            <button class='dismiss-message' role='button' onclick='dismissSuccess()'>
                 Dismiss.
-            </div>
+            </button>
         </div>
     </div>
     <script src='bundle.js'></script>

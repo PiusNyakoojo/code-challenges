@@ -1,81 +1,116 @@
 require('../styles.scss');
 require('../assets/stylesheets/animate.css');
 require('file?name=index.html!../index.html');
+let $ = require('jquery');
+window.jQuery = $;
+window.$ = $;
 
-((global) => {
+(() => {
+    // Add animateCss to jquery
+    $.fn.extend({
+        animateCss: function (animationName, callback) {
+            var animationEnd = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+            this.addClass('animated ' + animationName).one(animationEnd, function() {
+                $(this).removeClass('animated ' + animationName);
+
+                if (callback && typeof callback === 'function') {
+                    callback();
+                }
+            });
+        }
+    });
+})();
+
+$(document).ready(() => {
 
     let minChars = 3;
-    let progressAnimSpeed = 1600; // 1.6 seconds
+    let progressAnimSpeed = 1000; // 1.0 seconds
 
-    let startingPercent = 20;
-    let percentLeft = (100 - startingPercent);
+    let startingPercent = 40;
+    let goalPercent = 100;
+    let defaultPercentCss = 10; // default percent (set in css)
+    let percentLeft = (goalPercent - startingPercent);
     let pointsLeft = 35; // 35 points
 
-    let getUserInput = () => {
-        return $('#text-input').val();
-    };
+    initProgress();
 
-    let isValid = (value) => {
+    function initProgress() {
+        $('#progress-carot').animate({ left: (startingPercent - defaultPercentCss) + '%' }, 10);
+        $('#progress-bar').animate({ width: startingPercent + '%' }, 10);
+    }
+
+    function getUserInput() {
+        return $('#text-input').val();
+    }
+
+    function isValid(value) {
         if (value.length <= minChars)
             return false;
         
         return true;
-    };
+    }
 
-    let showMessage = () => {
+    function showMessage() {
         $('#input-prompt-message').html(`
             Please enter more than ${minChars} characters.
         `);
+        $('#input-prompt-message').attr('aria-hidden', 'false');
         $('#input-prompt').show();
-    };
+    }
 
-    let hideMessage = () => {
+    function hideMessage() {
         $('#input-prompt').hide();
-    };
+        $('#input-prompt-message').attr('aria-hidden', 'true');
+    }
 
     // Objective
-    let transition = () => {
+    function transition() {
         // jquery transition
-        //$('#initial-state').hide();
-        //$('#success-state').show();
 
         // increase the progress bar
         // reduce the points needed to go
-        // fade out initial state
+        // hide initial state
         // pop in success state
 
-        $('#progress-carot').animate({ left: percentLeft + '%' }, progressAnimSpeed);
-        $('#progress-bar').animate({ width: '100%' }, {
+        $('#progress-carot').animate({ left: (goalPercent - defaultPercentCss) + '%' }, progressAnimSpeed);
+        $('#progress-bar').animate({ width: goalPercent + '%' }, {
             duration: progressAnimSpeed,
             progress: (anim, percent, remainingMs) => {
                 $('#points-left').html(pointsLeft - Math.floor(pointsLeft * percent));
             },
             complete: () => {
-                $('#initial-state').fadeOut();
-                $('#success-state').slideDown();              
+                $('#initial-state').hide();
+                $('#success-state').show();                
+                $('#success-state').animateCss('bounceIn');              
             }
         });
         
-    };
+    }
 
     // Submit the Achievement Code
-    global.submitAchievementCode = () => {
+    window.submitAchievementCode = () => {
         hideMessage();
 
         let code = getUserInput();
 
-        if (isValid(code))
-            transition();
-        else
+        if (isValid(code)) {
+            $('#loading-icon-container').show();
+
+            setTimeout(() => { // simulate server-validation of the request
+                $('#loading-icon-container').hide();
+                transition();
+            }, 2000); 
+        } else {
             showMessage();
+        }
     };
     
     // Reset the demo
-    global.resetDemo = () => {
+    window.resetDemo = () => {
         $('#text-input').val("");
+        hideMessage();
 
-        $('#progress-carot').animate({ left: (startingPercent - 20) + '%' }, 10);
-        $('#progress-bar').animate({ width: startingPercent + '%' }, 10);
+        initProgress();
         $('#points-left').html(pointsLeft);
 
         $('#success-state').hide();
@@ -83,13 +118,17 @@ require('file?name=index.html!../index.html');
     };
 
     // Dismiss initial-state
-    global.dismissInitial = () => {
-        $('#initial-state').hide();
+    window.dismissInitial = () => {
+        $('#initial-state').animateCss('zoomOutUp', () => {
+            $('#initial-state').hide();
+        });
     };
 
     // Dismiss success-state
-    global.dismissSuccess = () => {
-        $('#success-state').hide();
+    window.dismissSuccess = () => {
+        $('#success-state').animateCss('bounceOut', () => {
+            $('#success-state').hide();
+        }); 
     };
 
-})(window);
+});

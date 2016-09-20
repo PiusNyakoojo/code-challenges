@@ -1,11 +1,8 @@
+@import './assets/stylesheets/global-variables';
 @import './assets/stylesheets/carot-mixin';
+@import './assets/stylesheets/loading-animation';
 
-/* General */
-$theme-color: #458804;
-$bold-text-font: bold 15px arial, serif;
-$text-font: 15px arial, serif;
-$text-color: #666666;
-$card-width: 70%; // Width of card (default 320px); can be replaced with %
+$card-width: 320px; // Width of card (default 320px); can be replaced with %
 
 /* Carot details (default) */
 $carot-size: 10px;
@@ -24,7 +21,7 @@ $card-border-radius: 5px;
 $cursor-size: 10px;
 
 /* Progress bar */
-$progress-percent: 20%; // percentage until completion
+$progress-percent: 10%; // default percentage until completion
 $progress-bar-bg-color: $text-color;
 $progress-bar-height: 15px;
 $progress-bar-border-radius: 5px;
@@ -88,6 +85,7 @@ $input-prompt-margin-bottom: 0px;
 
         .carot-2 {
             @include carot-2($prompt-carot-size, $prompt-carot-left, $prompt-bg-color);
+            left: calc(100% - 50px + #{$prompt-carot-size}) !important; // since calc() is not nestable in some browsers
         }
     }
 }
@@ -124,12 +122,22 @@ $input-prompt-margin-bottom: 0px;
     }
 }
 
+#loading-icon-container {
+    display: none;
+    width: 100%;
+    text-align: center;
+
+    .loading {
+        display: inline-block;
+    }
+}
+
 
 /* Initial State Card */
 
 #initial-state {
     position: absolute;
-    display: none;
+    //display: none;
 }
 
 #initial-state .card {
@@ -164,6 +172,7 @@ $input-prompt-margin-bottom: 0px;
 
             .carot-2 {
                 @include carot-2($progress-carot-size, $progress-carot-left, $progress-carot-color);
+                left: calc(#{$progress-percent} - #{$progress-carot-size} + #{$progress-carot-size}) !important; // since calc() is not nestable in some browsers
             }
         }
 
@@ -185,7 +194,6 @@ $input-prompt-margin-bottom: 0px;
     /* Card input */
     .card-input {
         position: relative;
-        background-color: orange;
         display: inline-block;
         width: calc(100%);
 
@@ -211,9 +219,10 @@ $input-prompt-margin-bottom: 0px;
         .button-input {
             position: relative;
             float: right;
-            border: 1px solid $theme-color;
-            height: calc(#{$card-input-height} + 1px);
-            padding: 0 $button-horiz-padding;
+            border: none;
+            height: 40px;
+            padding-left: $button-horiz-padding;
+            padding-right: $button-horiz-padding;
             background-color: $theme-color;
             color: $button-text-color;
             border-radius: $button-border-radius;
@@ -263,7 +272,7 @@ $checkmark-img-size: 100px;
 /* Success Card */
 #success-state {
     position: absolute;
-    //display: none;
+    display: none;
     width: $card-width;
 }
 
