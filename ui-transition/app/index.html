@@ -37,7 +37,7 @@
                     </div>
                 </div><br><br>
                 <div class='card-input'>
-                    <input id='text-input' class='text-input' type="text" role='textbox' aria-describedby="input-prompt-message">
+                    <input id='text-input' class='text-input' type="text" role='textbox' aria-describedby="input-prompt-message" onkeyup='if(event.which === 13 || event.keyCode === 13){ submitAchievementCode(); }'>
                     <button class='button-input' type="button" role='button' onclick='submitAchievementCode()'>ADD</button>
                     <div id='input-prompt'>
                         <div class='prompt-carot-container'>

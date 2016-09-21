@@ -2,8 +2,7 @@ require('../styles.scss');
 require('../assets/stylesheets/animate.css');
 require('file?name=index.html!../index.html');
 let $ = require('jquery');
-window.jQuery = $;
-window.$ = $;
+window.$ = window.jQuery = $;
 
 (() => {
     // Add animateCss to jquery
