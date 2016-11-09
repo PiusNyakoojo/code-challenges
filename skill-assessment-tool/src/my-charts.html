@@ -1,0 +1,185 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../src/chart-view-select.html">
+<link rel="import" href="../src/chart-view-list.html">
+<link rel="import" href="../src/chart-options.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="my-charts">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+
+        padding: 10px;
+      }
+
+      #chart-options {
+        position: fixed;
+        top: 150px;
+        right: 10px;
+      }
+    </style>
+    <!--<chart-view-select></chart-view-select>-->
+    <chart-view-list list="[[people]]"></chart-view-list>
+    <chart-options id="chart-options"></chart-options>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'my-charts',
+
+      properties: {
+        expectations: {
+          type: Object,
+          observer: "_updateExpectations"
+        },
+        people: {
+          type: Array,
+          observer: "_updatePeople"
+        },
+        previousRoles: {
+          type: Object,
+          observer: "_updatePreviousRoles"
+
+        },
+
+        allReady: {
+          type: Number,
+          value: 0 // 1 + 2 + 4 = 7 max
+        }
+      },
+
+      _updatePeople: function(people) {
+        this.allReady += 1;
+        if (this.allReady === 7) {
+          this._generateChartData();
+        }
+      },
+
+      _updateExpectations: function() {
+        this.allReady += 2;
+
+        if (this.allReady === 7) {
+          this._generateChartData();
+        }
+      },
+
+      _updatePreviousRoles: function() {
+        this.allReady += 4;
+
+        if (this.allReady === 7) {
+          this._generateChartData();
+        }
+      },
+
+      _generateChartData: function() {
+        console.log("Transforming Data!!");
+
+        // Generate Graph data for group-bar-graph.html
+        for (let id in this.people) {
+          let data = [];
+
+          let personalData = {};
+          personalData.State = this.people[id].name;
+
+          for (let skill in this.people[id].skills) {
+            personalData[skill] = this.people[id].skills[skill];
+          }
+
+          let peerData = {};
+          peerData.State = this.people[id].oldRole + " Avg.";
+
+          for (let avg in this.previousRoles[this.people[id].oldRole].avgs) {
+            peerData[avg] = this.previousRoles[this.people[id].oldRole].avgs[avg].avg;
+          }
+
+          let overallData = {};
+          overallData.State = "Overall Avg.";
+
+          for (let avg in this.previousRoles["Overall"]) {
+            overallData[avg] = this.previousRoles["Overall"][avg];
+          }
+
+          data.push(personalData);
+          data.push(peerData);
+          data.push(overallData);
+
+          this.people[id].data = data;
+        }
+
+        // Generate Recommended Roles
+
+        let some = "20";
+
+        for (let id in this.people) {
+          let recommendedRole = "",
+              possibleRoles = {};
+
+          for (let role in this.expectations) {
+            let bad = false;
+
+            for (let criteria in this.expectations[role]) {
+
+              if (id === some) {
+                //console.log("Score:" + this.people[id].skills[criteria] + ", criteria:" + criteria + "; Expected:" + this.expectations[role][criteria]);
+                //console.log("Person:", this.people[id]);
+              }
+
+              if (parseFloat(this.people[id].skills[criteria]) < parseFloat(this.expectations[role][criteria])) {
+
+                //if (id === some)
+                //  console.log("For position:" + role + " person " + id + " is bad at " + criteria);
+
+                bad = true;
+                break;
+              }
+
+              //if (id === some)
+              //  console.log("For position:" + role + " person " + id + " is good at " + criteria);
+            }
+
+
+            if (!bad) {
+              possibleRoles[role] = true;
+            }
+          }
+
+          //console.log("Possible Roles:", possibleRoles);
+
+          if (possibleRoles["Manager"])
+            recommendedRole = "Manager";
+
+          if (possibleRoles["Sr. Manager"])
+            recommendedRole = "Sr. Manager";
+
+          if (possibleRoles["Supervisor"])
+            recommendedRole = "Supervisor";
+
+          if (possibleRoles["Director"])
+            recommendedRole = "Director";
+
+          if (possibleRoles["Group Director"])
+            recommendedRole = "Group Director";
+
+          if (possibleRoles["Managing Director"])
+            recommendedRole = "Managing Director";
+
+          //if (id === some)
+          //  console.log("For " + id + " we recommend ", possibleRoles);
+
+          this.people[id].recommendedRole = recommendedRole;
+        }
+      }
+    });
+  </script>
+</dom-module>

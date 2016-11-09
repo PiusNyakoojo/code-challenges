@@ -1,0 +1,98 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../src/chart-graph.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="chart-view-list">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+        font: 10px sans-serif;
+
+        .axis path,
+        .axis line {
+          fill: none;
+          stroke: #000;
+          shape-rendering: crispEdges;
+        }
+
+        .bar {
+          fill: steelblue;
+        }
+
+        .x.axis path {
+          display: none;
+        }
+      }
+      .list {
+        max-width: 700px;
+      }
+      .item {
+        float: left;
+        text-align: left;
+      }
+      .personinfo {
+        display: inline-block;
+      }
+
+      #recommendedrole {
+        /*vertical-align: top;*/
+      }
+    </style>
+    <div class="list">
+      <template is="dom-repeat" items="{{list}}">
+        <div class="item">
+          <div class="personinfo">
+            <paper-card id="personinfo">
+              <div class="card-content">
+                <h3>{{item.name}}</h3>
+                <strong>Current Role: </strong><span>{{item.oldRole}}</span><br>
+                <strong>Client: </strong><span>{{item.client}}</span><br>
+              </div>
+            </paper-card>
+            <paper-card id="recommendedrole">
+              <div class="card-content">
+                <span>Recommended Role:</span><br>
+                <strong>[[item.recommendedRole]]</strong>
+                <template is="dom-if" if="{{!_hasRecommendedRole(item.recommendedRole)}}">
+                  <span style="color: red;">No recommendation</span>
+                </template>
+              </div>
+            </paper-card>
+          </div>
+          <br>
+          <chart-graph data="[[item.data]]"></chart-graph>
+          <hr>
+        </div>
+      </template>
+    </div>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'chart-view-list',
+
+      properties: {
+        list: {
+          type: Array
+        }
+      },
+
+      _hasRecommendedRole: function() {
+        return this.recommendedRole !== "";
+      }
+
+    });
+  </script>
+</dom-module>

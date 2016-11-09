@@ -1,0 +1,51 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../src/data-collector.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="my-icons.html">
+
+<dom-module id="my-how">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+        padding: 10px;
+      }
+      
+      #upload {
+        outline: none;
+      }
+    </style>
+
+    <div class="card">
+      <h1>Welcome to the Skill Assessment Tool!</h1>
+    </div>
+    <div class="card">
+      <div class="circle">1</div>
+      <h3>Upload a .xml file containing your data</h3>
+      <data-collector id="collector" on-update="_update"></data-collector>
+      <!--<paper-button raised><iron-icon icon="file-upload"></iron-icon>Upload Data</paper-button>-->
+    </div>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'my-how',
+
+      _update: function(e) {
+        this.fire('data-collected', e.detail);
+      }
+    });
+  </script>
+</dom-module>

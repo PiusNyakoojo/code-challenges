@@ -1,0 +1,251 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+
+<!--
+`skill-assessment`
+
+
+@demo demo/index.html
+-->
+
+<dom-module id="data-collector">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <input id="fileInput" type="file" name="File" value="UPLOAD FILE" on-change="uploadFile">
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'data-collector',
+
+      listeners: {
+        'update': 'hello'
+      },
+
+      properties: {
+        expectations: {
+          type: Object
+        },
+        people: {
+          type: Object
+        },
+        previousRoles: {
+          type: Object
+        }
+      },
+
+      hello: function() {
+
+      },
+      generateExpectations: function(data) {
+        var expectations = {};
+
+        if (!data) {
+          console.log("NO DATA!!");
+          return;
+        }
+
+        for (let i = 1; i < 7; i++) {
+          if (i <= 3) {
+            let role = data.Row[i].Cell[1].Data["#text"];
+            expectations[role] = {};
+            for (let j = 2; j < 7; j++) {
+              expectations[role][j - 2] = data.Row[i].Cell[j].Data["#text"];
+            }
+          } else {
+            let role = data.Row[i].Cell[0].Data["#text"];
+            expectations[role] = {};
+            for (let j = 1; j < 6; j++) {
+              expectations[role][j - 1] = data.Row[i].Cell[j].Data["#text"];
+            }
+          }
+
+        }
+
+        this.expectations = expectations;
+      },
+
+      generatePeople: function(data) {
+        var people = {};
+        var previousRoles = {};
+
+        for (let i = 8; i < 53; i++) {
+          let person = {};
+          let id = data.Row[i].Cell[0].Data["#text"];
+          let oldRole = data.Row[i].Cell[2].Data["#text"]
+
+          person["name"] = data.Row[i].Cell[1].Data["#text"];
+
+          person["oldRole"] = oldRole;
+
+          person["client"] = data.Row[i].Cell[4].Data["#text"];
+
+
+          if (!previousRoles[oldRole])
+            previousRoles[oldRole] = {};
+
+          previousRoles[oldRole][id] = true;
+
+          person["skills"] = {};
+
+          for (let j = 5; j < 10; j++) {
+            person.skills[j - 5] = data.Row[i].Cell[j].Data["#text"];
+          }
+          people[id] = person;
+        }
+
+        //console.log(people);
+        //console.log(previousRoles);
+
+        this.previousRoles = previousRoles;
+        this.people = people;
+
+        this.generateStats();
+      },
+
+      generateStats: function() {
+
+        for (let oldRole in this.previousRoles) {
+          let numOfPeople = parseFloat(Object.keys(this.previousRoles[oldRole]).length);
+          this.previousRoles[oldRole].avgs = {};
+
+          for (let i = 0; i < 5; i++) {
+              this.previousRoles[oldRole].avgs[i] = {sum: 0, avg: 0};
+          }
+
+          for (let personId in this.previousRoles[oldRole]) {
+            if (personId !== "avgs") {
+
+              for (let i = 0; i < Object.keys(this.people[personId].skills).length; i++) {
+                  this.previousRoles[oldRole].avgs[i].sum += parseFloat(this.people[personId].skills[i]);
+              }
+            }
+          }
+
+          for (let i = 0; i < Object.keys(this.previousRoles[oldRole].avgs).length; i++) {
+              this.previousRoles[oldRole].avgs[i].avg = this.previousRoles[oldRole].avgs[i].sum / numOfPeople;
+          }
+        }
+
+        let overall = {};
+        let numOfPeople = Object.keys(this.people).length;
+
+        for (let i = 0; i < 5; i++) {
+          overall[i] = 0;
+        }
+
+        for (let oldRole in this.previousRoles) {
+          for (let criteria in this.previousRoles[oldRole].avgs) {
+            overall[criteria] += parseFloat(this.previousRoles[oldRole].avgs[criteria].sum);
+          }
+        }
+
+        for (let i = 0; i < 5; i++) {
+          overall[i] /= numOfPeople;
+        }
+
+        this.previousRoles["Overall"] = overall;
+
+        //console.log(this.previousRoles);
+
+        this.fire("update", {
+          expectations: this.expectations,
+          people: this.people,
+          previousRoles: this.previousRoles });
+      },
+
+      uploadFile: function() {
+        var file = this.$.fileInput.files[0];
+        var my = this;
+
+        if (file) {
+          var reader = new FileReader();
+          reader.readAsText(file, "UTF-8");
+          reader.onload = function (evt) {
+
+            /*
+            Worksheet > Table > Row OR
+            Worksheet > 0 > Table
+            */
+
+            var data = (my.xmlToJson(my.parseXml(evt.target.result))).Workbook.Worksheet[0].Table;
+
+            my.generateExpectations(data);
+            my.generatePeople(data);
+
+          }
+          reader.onerror = function (evt) {
+
+            alert("Error reading file.");
+
+          }
+        }
+      },
+
+      xmlToJson: function(xml) {
+
+      	// Create the return object
+      	var obj = {};
+
+      	if (xml.nodeType == 1) { // element
+      		// do attributes
+      		if (xml.attributes.length > 0) {
+      		obj["@attributes"] = {};
+      			for (var j = 0; j < xml.attributes.length; j++) {
+      				var attribute = xml.attributes.item(j);
+      				obj["@attributes"][attribute.nodeName] = attribute.nodeValue;
+      			}
+      		}
+      	} else if (xml.nodeType == 3) { // text
+      		obj = xml.nodeValue;
+      	}
+
+      	// do children
+      	if (xml.hasChildNodes()) {
+      		for(var i = 0; i < xml.childNodes.length; i++) {
+      			var item = xml.childNodes.item(i);
+      			var nodeName = item.nodeName;
+      			if (typeof(obj[nodeName]) == "undefined") {
+      				obj[nodeName] = this.xmlToJson(item);
+      			} else {
+      				if (typeof(obj[nodeName].push) == "undefined") {
+      					var old = obj[nodeName];
+      					obj[nodeName] = [];
+      					obj[nodeName].push(old);
+      				}
+      				obj[nodeName].push(this.xmlToJson(item));
+      			}
+      		}
+      	}
+      	return obj;
+      },
+
+      parseXml: function(xmlText) {
+        var parseXml;
+
+        if (window.DOMParser) {
+            parseXml = function(xmlStr) {
+                return ( new window.DOMParser() ).parseFromString(xmlStr, "text/xml");
+            };
+        } else if (typeof window.ActiveXObject != "undefined" && new window.ActiveXObject("Microsoft.XMLDOM")) {
+            parseXml = function(xmlStr) {
+                var xmlDoc = new window.ActiveXObject("Microsoft.XMLDOM");
+                xmlDoc.async = "false";
+                xmlDoc.loadXML(xmlStr);
+                return xmlDoc;
+            };
+        } else {
+            parseXml = function() { return null; }
+        }
+
+        return parseXml(xmlText);
+      }
+
+    });
+  </script>
+</dom-module>

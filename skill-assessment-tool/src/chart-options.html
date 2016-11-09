@@ -1,0 +1,137 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="chart-options">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+        font: 10px sans-serif;
+
+        .axis path,
+        .axis line {
+          fill: none;
+          stroke: #000;
+          shape-rendering: crispEdges;
+        }
+
+        .bar {
+          fill: steelblue;
+        }
+
+        .x.axis path {
+          display: none;
+        }
+      }
+
+      #legend {
+
+      }
+
+      .content {
+        float: right;
+        text-align: right;
+      }
+      .options {
+        display: inline-block;
+      }
+    </style>
+    <div class="content">
+      <div class="card">
+        <div id="legend"></div>
+      </div>
+      <div class="card options">
+        <paper-dropdown-menu label="View style">
+          <paper-listbox class="dropdown-content" selected="1">
+            <paper-item>Item</paper-item>
+            <paper-item>List</paper-item>
+          </paper-listbox>
+        </paper-dropdown-menu>
+        <br>
+        <paper-dropdown-menu label="Role (Chris Logic)">
+          <paper-listbox class="dropdown-content" selected="1">
+            <paper-item>Managing Director</paper-item>
+            <paper-item>Group Director</paper-item>
+            <paper-item>Director</paper-item>
+            <paper-item>Supervisor</paper-item>
+            <paper-item>Sr. Manager</paper-item>
+            <paper-item>Manager</paper-item>
+          </paper-listbox>
+        </paper-dropdown-menu>
+      </div>
+    </div>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'chart-options',
+
+      properties: {
+        names: {
+          type: Array,
+          observer: '_updateKeys'
+        }
+      },
+
+      ready: function() {
+        var keys = ["Client Management & Communication Skills","Internal Team Management","Omni Channel Communication","Agile Development","Product Management"];
+        this.createLegend(keys);
+      },
+
+      _updateKeys: function(keys) {
+        this.createLegend(keys);
+      },
+
+      createLegend: function(keys) {
+        // Define Dimensions
+
+        var margin = {top: 20, right: 20, bottom: 20, left: 20},
+            width = 400 - margin.left - margin.right,
+            height = 130 - margin.top - margin.bottom;
+
+        var color = d3.scale.ordinal()
+              .range(["#E5F9E0", "#A3F7B5", "#40C9A2", "#2F9C95", "#664147"]);
+
+        var svg = d3.select(this.$.legend).append("svg")
+              .attr("width", width + margin.left + margin.right)
+              .attr("height", height + margin.top + margin.bottom)
+              .append("g")
+              .attr("transform", "translate(" + margin.left + "," + margin.top +  ")");
+
+        // Generate Legend
+        var legend = svg.selectAll(".legend")
+            .data(keys.slice().reverse())
+          .enter().append("g")
+            .attr("class", "legend")
+            .attr("transform", function(d, i) { return "translate(0," + (i * 20) + ")"; });
+
+        legend.append("rect")
+            .attr("x", width - 18)
+            .attr("width", 18)
+            .attr("height", 18)
+            .style("fill", color);
+
+        legend.append("text")
+            .attr("x", width - 24)
+            .attr("y", 9)
+            .attr("dy", ".35em")
+            .style("text-anchor", "end")
+            .text(function(d) { return d; });
+
+      }
+    });
+  </script>
+</dom-module>

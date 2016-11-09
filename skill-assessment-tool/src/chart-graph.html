@@ -1,0 +1,192 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="chart-graph">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: inline-block;
+        font: 10px sans-serif;
+
+        .axis path,
+        .axis line {
+          fill: none;
+          stroke: #000;
+          shape-rendering: crispEdges;
+        }
+
+        .bar {
+          fill: steelblue;
+        }
+
+        .x.axis path {
+          display: none;
+        }
+      }
+
+      #graph {
+        display: inline-block;
+      }
+    </style>
+    <div id="graph"></div>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'chart-graph',
+
+      properties: {
+        data: {
+          type: Array,
+          observer: '_updateData'
+        }
+      },
+
+      /*
+      ready: function() {
+
+        var data = [{
+              "State": "John Smith",
+              "Client Management & Communication Skills": "3.5",
+              "Internal Team Management": "4",
+              "Omni Channel Communication": "2",
+              "Agile Development": "4",
+              "Product Management": "3.5"
+            },
+            {
+              "State": "Senior Analyst Avg.",
+              "Client Management & Communication Skills": "3",
+              "Internal Team Management": "4",
+              "Omni Channel Communication": "3",
+              "Agile Development": "3",
+              "Product Management": "4"
+            },
+            {
+              "State": "Overall Avg.",
+              "Client Management & Communication Skills": "3",
+              "Internal Team Management": "4",
+              "Omni Channel Communication": "2",
+              "Agile Development": "4",
+              "Product Management": "4"
+            }];
+        this.createGrid(data);
+      },
+      */
+      _updateData: function(newData) {
+        //console.log(newData);
+        this.createGrid(newData);
+      },
+      _hasRecommendedRole: function() {
+        return this.recommendedRole !== "";
+      },
+
+
+      createGrid: function(data) {
+        // Define Dimensions
+
+        var margin = {top: 50, right: 20, bottom: 30, left: 80},
+            width = 600 - margin.left - margin.right,
+            height = 200 - margin.top - margin.bottom;
+
+        // Generate Axises
+
+        var x0 = d3.scale.ordinal()
+              .rangeRoundBands([0, width], .3);
+        var x1 = d3.scale.ordinal();
+
+        var y = d3.scale.linear()
+              .range([height, 0]);
+
+        var color = d3.scale.ordinal()
+              .range(["#E5F9E0", "#A3F7B5", "#40C9A2", "#2F9C95", "#664147"]);
+
+        var xAxis = d3.svg.axis()
+              .scale(x0)
+              .orient("bottom");
+
+        var yAxis = d3.svg.axis()
+              .scale(y)
+              .orient("left")
+              .tickFormat(d3.format("d"));
+
+        var svg = d3.select(this.$.graph).append("svg")
+              .attr("width", width + margin.left + margin.right)
+              .attr("height", height + margin.top + margin.bottom)
+              .append("g")
+              .attr("transform", "translate(" + margin.left + "," + margin.top +  ")");
+
+        // Display Data
+
+        var criteriaNames = d3.keys(data[0]).filter(function(key) { return key !== "State"; });
+
+        data.forEach(function(d) {
+          d.criteria = criteriaNames.map(function(name) { return {name: name, value: +d[name]}; });
+        });
+
+        x0.domain(data.map(function(d) { return d.State; }));
+        x1.domain(criteriaNames).rangeRoundBands([0, x0.rangeBand()]);
+        y.domain([0, 4]);
+        //y.domain([0, d3.max(data, function(d) { return d3.max(d.criteria, function(d) { return d.value; }); })]);
+
+        // X-Axis
+        svg.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + height + ")")
+            .call(xAxis);
+
+        // Y-Axis
+        svg.append("g")
+            .attr("class", "y axis")
+            .call(yAxis)
+          .append("text")
+            .attr("transform", "translate(-50, 30) rotate(-90)")
+            .attr("y", 6)
+            .attr("dy", ".71em")
+            .style("text-anchor", "end")
+            .text("Score"); // Hard-coded "Score"
+
+        // Horiztonal Grid lines
+        svg.selectAll("line.horizontalGrid").data(y.ticks(4)).enter()
+        .append("line")
+            .attr(
+            {
+                "class":"horizontalGrid",
+                "x1" : margin.right - 20,
+                "x2" : width,
+                "y1" : function(d){ return y(d);},
+                "y2" : function(d){ return y(d);},
+                "fill" : "none",
+                "shape-rendering" : "crispEdges",
+                "stroke" : "black",
+                "stroke-width" : "1px"
+            });
+
+        var state = svg.selectAll(".state")
+            .data(data)
+          .enter().append("g")
+            .attr("class", "g")
+            .attr("transform", function(d) { return "translate(" + x0(d.State) + ",0)"; });
+
+        state.selectAll("rect")
+            .data(function(d) { return d.criteria; })
+          .enter().append("rect")
+            .attr("width", x1.rangeBand())
+            .attr("x", function(d) { return x1(d.name); })
+            .attr("y", function(d) { return y(d.value); })
+            .attr("height", function(d) { return height - y(d.value); })
+            .style("fill", function(d) { return color(d.name); });
+
+      },
+    });
+  </script>
+</dom-module>

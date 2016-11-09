@@ -1,0 +1,25 @@
+{
+  "entrypoint": "index.html",
+  "shell": "src/my-app.html",
+  "fragments": [
+    "src/chart-graph.html",
+    "src/chart-options.html",
+    "src/chart-view-list.html",
+    "src/chart-view-select.html",
+    "src/my-how.html",
+    "src/data-collector.html",
+    "src/my-charts.html",
+    "src/my-autoassign.html",
+    "src/my-view404.html"
+  ],
+  "sourceGlobs": [
+   "src/**/*",
+   "images/**/*",
+   "bower.json"
+  ],
+  "includeDependencies": [
+    "manifest.json",
+    "bower_components/webcomponentsjs/webcomponents-lite.min.js",
+    "src/d3.v3.min.js"
+  ]
+}
