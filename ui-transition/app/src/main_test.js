@@ -11,7 +11,7 @@ describe('Submitting achievement code', () => {
         e.which = e.keyCode = 13;
         return input.val(text).trigger(e);
     };
-
+/*
     it('retrieves user input', () => {
         
     });
@@ -27,4 +27,5 @@ describe('Submitting achievement code', () => {
     it('transitions from initial-state to success-state', () => {
 
     });
+*/
 });
